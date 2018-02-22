@@ -4,7 +4,8 @@
  * and open the template in the editor.
  */
 
-import java.beans.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
 
 /**
@@ -13,43 +14,30 @@ import java.io.Serializable;
  */
 public class Producto implements Serializable {
 
-    public static final String PROP_SAMPLE_PROPERTY = "sampleProperty";
-
-    private String sampleProperty;
-    private PropertyChangeSupport propertySupport;
-
     private String descripcion;
     private int idproducto;
-    private int stockminimo;
-    private float pvp;
+    private int stockmin, stockactual;
+    private float vp;
+    PropertyChangeSupport propertyS;
 
     public Producto() {
-        propertySupport = new PropertyChangeSupport(this);
+        propertyS = new PropertyChangeSupport(this);
+        stockmin = 0;
     }
 
-    public Producto(String sampleProperty, PropertyChangeSupport propertySupport, String descripcion, int idproducto, int stockminimo, float pvp) {
-        this.sampleProperty = sampleProperty;
-        this.propertySupport = propertySupport;
-        this.descripcion = descripcion;
-        this.idproducto = idproducto;
-        this.stockminimo = stockminimo;
-        this.pvp = pvp;
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyS.addPropertyChangeListener(listener);
     }
 
-    public String getSampleProperty() {
-        return sampleProperty;
+    public int getStockactual() {
+        return stockactual;
     }
 
-    public void setSampleProperty(String sampleProperty) {
-        this.sampleProperty = sampleProperty;
-    }
-
-    public PropertyChangeSupport getPropertySupport() {
-        return propertySupport;
-    }
-
-    public void setPropertySupport(PropertyChangeSupport propertySupport) {
-        this.propertySupport = propertySupport;
+    public void setStockactual(int stockUpdate) {
+        if (stockUpdate < stockmin) {
+            propertyS.firePropertyChange("stockactual", stockactual, stockUpdate);
+        }
+        this.stockactual = stockUpdate;
     }
 
     public String getDescripcion() {
@@ -68,23 +56,28 @@ public class Producto implements Serializable {
         this.idproducto = idproducto;
     }
 
-    public int getStockminimo() {
-        return stockminimo;
+    public int getStockmin() {
+        return stockmin;
     }
 
-    public void setStockminimo(int stockminimo) {
-        this.stockminimo = stockminimo;
+    public void setStockmin(int stockmin) {
+        this.stockmin = stockmin;
     }
 
-    public float getPvp() {
-        return pvp;
+    public float getVp() {
+        return vp;
     }
 
-    public void setPvp(float pvp) {
-        this.pvp = pvp;
+    public void setVp(float vp) {
+        this.vp = vp;
     }
-    
 
-    
+    public PropertyChangeSupport getPropertyS() {
+        return propertyS;
+    }
+
+    public void setPropertyS(PropertyChangeSupport propertyS) {
+        this.propertyS = propertyS;
+    }
 
 }
